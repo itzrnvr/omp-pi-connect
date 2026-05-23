@@ -1,4 +1,4 @@
-import { DynamicBorder, type ExtensionAPI } from "@oh-my-pi/pi-coding-agent";
+import { DynamicBorder, getSelectListTheme, type ExtensionAPI } from "@oh-my-pi/pi-coding-agent";
 import { getEnvApiKey } from "@oh-my-pi/pi-ai";
 import { getOAuthProviders } from "@oh-my-pi/pi-ai/utils/oauth";
 import { Container, fuzzyFilter, Input, Key, matchesKey, SelectList, Text, type SelectItem } from "@oh-my-pi/pi-tui";
@@ -130,6 +130,7 @@ async function pickItem(ctx: any, title: string, subtitle: string | undefined, i
     const sectionOauth = items.find((item) => item.value === "__section_oauth");
     const sectionApi = items.find((item) => item.value === "__section_api");
     const itemTheme = {
+      ...getSelectListTheme(),
       selectedPrefix: (t: string) => theme.fg("accent", t),
       selectedText: (t: string) => theme.fg("accent", theme.bold(t)),
       description: (t: string) => theme.fg("muted", t),
