@@ -1,6 +1,7 @@
-import { DynamicBorder, type ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { getEnvApiKey } from "@mariozechner/pi-ai";
-import { Container, fuzzyFilter, Input, Key, matchesKey, SelectList, Text, type SelectItem } from "@mariozechner/pi-tui";
+import { DynamicBorder, type ExtensionAPI } from "@oh-my-pi/pi-coding-agent";
+import { getEnvApiKey } from "@oh-my-pi/pi-ai";
+import { getOAuthProviders } from "@oh-my-pi/pi-ai/utils/oauth";
+import { Container, fuzzyFilter, Input, Key, matchesKey, SelectList, Text, type SelectItem } from "@oh-my-pi/pi-tui";
 import { exec as execCb } from "node:child_process";
 
 const DISPLAY_NAME_OVERRIDES: Record<string, string> = {
@@ -97,7 +98,7 @@ function sortProviderIds(providerIds: string[]): string[] {
 function getRuntimeProviderIds(ctx: any): string[] {
   const fromModels = ctx.modelRegistry.getAll().map((model: any) => model.provider);
   const fromSavedAuth = ctx.modelRegistry.authStorage.list();
-  const fromOauth = ctx.modelRegistry.authStorage.getOAuthProviders().map((provider: any) => provider.id);
+  const fromOauth = getOAuthProviders().map((provider: any) => provider.id);
   return [...new Set([...fromModels, ...fromSavedAuth, ...fromOauth])];
 }
 
@@ -206,7 +207,7 @@ async function pickItem(ctx: any, title: string, subtitle: string | undefined, i
 export default function piConnectExtension(pi: ExtensionAPI) {
   async function chooseProvider(ctx: any) {
     const authStorage = ctx.modelRegistry.authStorage;
-    const oauthProviders = authStorage.getOAuthProviders();
+    const oauthProviders = getOAuthProviders();
     const apiProviderIds = getApiCapableProviderIds(ctx);
 
     const statusIcon = (providerId: string) => {
@@ -298,7 +299,7 @@ export default function piConnectExtension(pi: ExtensionAPI) {
         return;
       }
 
-      const oauthIds = new Set(ctx.modelRegistry.authStorage.getOAuthProviders().map((provider: any) => provider.id));
+      const oauthIds = new Set(getOAuthProviders().map((provider: any) => provider.id));
       const apiIds = new Set(getApiCapableProviderIds(ctx));
 
       if (oauthIds.has(providerId) && apiIds.has(providerId)) {
