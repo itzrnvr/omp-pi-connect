@@ -274,6 +274,7 @@ export default function piConnectExtension(pi: ExtensionAPI) {
       return;
     }
     await authStorage.set(providerId, { type: "api_key", key: value.trim() });
+    authStorage.removeConfigApiKey(providerId);
     ctx.ui.notify(`Saved ${prettyProviderName(providerId)}`, "info");
   }
 
