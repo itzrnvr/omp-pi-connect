@@ -273,7 +273,7 @@ export default function piConnectExtension(pi: ExtensionAPI) {
       ctx.ui.notify("Cancelled", "info");
       return;
     }
-    authStorage.set(providerId, { type: "api_key", key: value.trim() });
+    await authStorage.set(providerId, { type: "api_key", key: value.trim() });
     ctx.ui.notify(`Saved ${prettyProviderName(providerId)}`, "info");
   }
 
@@ -343,7 +343,7 @@ export default function piConnectExtension(pi: ExtensionAPI) {
       const selected = await pickItem(ctx, "Disconnect provider", "Remove a saved credential", items);
       const selectedProviderId = selected?.value;
       if (!selectedProviderId) return;
-      authStorage.remove(selectedProviderId);
+      await authStorage.remove(selectedProviderId);
       ctx.ui.notify(`Removed ${prettyProviderName(selectedProviderId)}`, "info");
     },
   });
